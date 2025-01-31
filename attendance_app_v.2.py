@@ -3,15 +3,26 @@ import pandas as pd
 import smtplib
 from datetime import datetime, timedelta
 from email.message import EmailMessage
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
 
 # Constants
-EMPLOYEE_CSV = "employees.csv"
-ATTENDANCE_CSV = "attendance.csv"
-LEAVE_CSV = "leaves.csv"
 ADMIN_EMAIL = "vysakharaghavan@gmail.com"
-
-# Constants for email reminder
 REMINDER_THRESHOLD = timedelta(hours=10)  # 10 hours threshold
+
+# Google Sheets Authentication
+SHEET_URL = "https://docs.google.com/spreadsheets/d/1Q9cMKjS1E8bqscOPixzyNMxmxo64twE9QOWT3e7NHIA/edit?usp=sharing"  # Replace with actual URL
+SERVICE_ACCOUNT_FILE = "C:/Users/SONY/Downloads/Python/attendance app_streamlit/qurocare-alms-tool-965aa7b57765.json"  # Update with your JSON file
+
+scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+credentials = ServiceAccountCredentials.from_json_keyfile_name(SERVICE_ACCOUNT_FILE, scope)
+client = gspread.authorize(credentials)
+
+# Open Sheets
+sheet = client.open_by_url(SHEET_URL)
+employees_sheet = sheet.worksheet("employees")
+attendance_sheet = sheet.worksheet("attendance")
+leaves_sheet = sheet.worksheet("leaves")
 
 # Load CSV files
 def load_data():
