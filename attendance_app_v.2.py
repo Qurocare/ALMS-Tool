@@ -47,6 +47,10 @@ employees, attendance, leaves = load_data()
 # Function to send reminder emails if needed
 def send_clock_out_reminder(employee, attendance):
     today = datetime.now().strftime("%Y-%m-%d")
+    
+    # Convert clock_in to string and handle NaN values
+    attendance["clock_in"] = attendance["clock_in"].fillna("").astype(str)
+    
     user_attendance = attendance[(attendance["name"] == employee["name"]) & (attendance["clock_in"].str.startswith(today))]
     
     if not user_attendance.empty:
