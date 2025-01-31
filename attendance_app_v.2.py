@@ -12,7 +12,7 @@ REMINDER_THRESHOLD = timedelta(hours=10)  # 10 hours threshold
 
 # Google Sheets Authentication
 SHEET_URL = "https://docs.google.com/spreadsheets/d/1Q9cMKjS1E8bqscOPixzyNMxmxo64twE9QOWT3e7NHIA/edit?usp=sharing"  # Replace with actual URL
-SERVICE_ACCOUNT_FILE = "C:/Users/SONY/Downloads/Python/attendance app_streamlit/qurocare-alms-tool-965aa7b57765.json"  # Update with your JSON file
+SERVICE_ACCOUNT_FILE = "qurocare-alms-tool-965aa7b57765.json"  # Update with your JSON file
 
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 credentials = ServiceAccountCredentials.from_json_keyfile_name(SERVICE_ACCOUNT_FILE, scope)
