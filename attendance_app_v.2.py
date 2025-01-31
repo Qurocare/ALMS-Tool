@@ -26,20 +26,17 @@ leaves_sheet = sheet.worksheet("leaves")
 
 # Load CSV files
 def load_data():
-    employees = pd.read_csv(EMPLOYEE_CSV, dtype={"passkey": str})  # Force passkey as string
-    attendance = pd.read_csv(ATTENDANCE_CSV)
-    leaves = pd.read_csv(LEAVE_CSV)
-    
-    # Strip any leading/trailing spaces from column names
-    employees.columns = employees.columns.str.strip()
-    attendance.columns = attendance.columns.str.strip()
-    leaves.columns = leaves.columns.str.strip()
+    employees = pd.DataFrame(employees_sheet.get_all_records())
+    attendance = pd.DataFrame(attendance_sheet.get_all_records())
+    leaves = pd.DataFrame(leaves_sheet.get_all_records())
     
     return employees, attendance, leaves
-
-# Save data back to CSV
-def save_data(df, filename):
-    df.to_csv(filename, index=False)
+    
+# Save Data back to Google Sheets
+def save_data_to_google_sheets(df, sheet_name):
+    worksheet = sheet.worksheet(sheet_name)
+    worksheet.clear()  # Clear the existing data
+    worksheet.update([df.columns.values.tolist()] + df.values.tolist())  # Update with new data
 
 # Send email notification
 def send_email(to_email, subject, body):
