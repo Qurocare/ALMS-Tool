@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "qurocare-alms-tool",
+  "private_key_id": "965aa7b577651fcd5781201b9054a20e8c1e4a2b",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCswiDkcGTWPgR2\ns/lPt5GX4kWvHtY81JOeVIKv+WIqX6ZX9gI1dSiIiNIsCWqPceSmHviB4Bzpn/Q3\nfNHc4rMWldoXbqPbj3JnlY2WeIGCnBgYyxUw2CuDg7bBZecqj8Dvx5Ekt4GfBQrq\nYSvV8tOyh8jZ5QBwaH01+wN5SH2LXUrKXyb3sMx8vORPzO1CPzNp06cWZlhpxNYi\nd5wUuGmUE88V+KLxZnGo/JkATKQq3PdPrc0RTOXKUoKdrBBpJaY6asQA9SnzwXyj\n3VdreFHXsFgyaPnXjLIC1R7mrFii4nmr9R1JfY8hda5+2rvqQekFIkMwf7+CF2wc\n1Y23cVJnAgMBAAECggEAFK6xDWg/Sj7mfeeSA28wqQRX311LvMCeY6gudS7gB76n\nxYQYQ5ohHidzMf52mXHDM/glPDc+fuG9dR8maNFjK2MJVyDR0SldQvVunAMVTjOt\n1toJUW2v1/De4kx23muTZ6F2yPSHOih6ZBD6FIUbvxXuf9egs9RumRXSFqUNErAI\nL+W6OzT4+O5cUS51NYZzdqpQv/8Z7cKGNV85lWjsJ2/sXeuslgkzOrMRj5EtaaGU\niEFj5TXrBQ2iB0+sppfd45Q+4AsFS90L4Y7g2EVykdxzsccIiIh51AxCK5E/UcIe\nW82eRgYdG4Z4yvb6qX22jGoJxOBhymBB8m0kHa4+MQKBgQDZnonNmcWgSfoyJqMo\nkUicRhNK+iWpUD05mbhKd5qu+0DVmP3c7GwKg44rIpyOBOIPa5osrqiWd348p0OL\nfN2PCLX1VlGeuPC4qYGUhyJVTogr92nY3gWCA6XXYYrHgPU3XFtzlfbUx/7KzInK\ncq2EjyNh7SJH5z/e7zCnSQz6tQKBgQDLOiCV1DBWnjGn7jYnfVtQTN65Fxovbjes\ndca6EXOOFJzRfcLlzwSsD110PYZrzaf1uwh2eKOmV/aQEBBLSwRGEPF7EGBqtAzf\n9AD6D6gNIiY6xmzhKxcAFOmDbk96dLCh2Tnt+I3/7KF9yOb6t9hB763kGsVVUhRs\nyfZjLJoeKwKBgQCO/xYd+8VYpkO5YJolthG4XnOe+PB2aTtR9iibBiymfoMD2Bw4\nZ0I3RmrM/VlSGPNSnqoYYkx1Ut+oi2Be8BXGPzsRkz7exTeon/l9164/z/K6sUDk\nOD/2Rt9av8WpgpufXRjawtgGycQrDmwck25hhI0DdAbqqJHXs+SMh/v3YQKBgQDG\nFSQJpcZvxsVTj0XNe8vzGtnDwpbNQDqXqDxIxBXDmKe5MUE0SXGeW2OVlxpcHRnm\n06ROBQxNaFN025NmL/o8aOtWLgIsPs6FwwjoszXzhyOICju5xQwoEjoA1xY0n2RC\nfL6QCsItfvFw7s7j9SmeKwVs3gMVRGmQF9JFnAWj/QKBgEEwqJtyxV5E6j+TmMwe\nYbYdlD0KqeFj0MHmBlvdvm/Pkoh9eGj9ez93CHaZW23hxuovNrtsBxPkFvtM5JWS\nDurqZWyQvtGv0/l5GCMOkhXhVfeJ25GH43lPbAGS3aprqD5JkY+gpAljoWzYKpbH\nKB9z8xJ9oSEnOhENpL9BBpQV\n-----END PRIVATE KEY-----\n",
+  "client_email": "bridging-tech@qurocare-alms-tool.iam.gserviceaccount.com",
+  "client_id": "113262704373617908254",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/bridging-tech%40qurocare-alms-tool.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
