@@ -46,37 +46,15 @@ def load_data():
     attendance = pd.DataFrame(attendance_sheet.get_all_records())
     leaves = pd.DataFrame(leaves_sheet.get_all_records())
 
+    # Check if data is fetched correctly
+    print("Employees DataFrame:", employees.head())  # Check first few rows of employees
+    print("Attendance DataFrame:", attendance.head())  # Check first few rows of attendance
+    print("Leaves DataFrame:", leaves.head())  # Check first few rows of leaves
+
     # Convert 'passkey' column to string
     employees["passkey"] = employees["passkey"].astype(str)
     
     return employees, attendance, leaves
-
-
-
-# After loading the data
-print("Columns in attendance DataFrame:", attendance.columns)
-# Strip any extra spaces from column names
-attendance.columns = attendance.columns.str.strip()
-print("Cleaned Columns in attendance DataFrame:", attendance.columns)
-# Check for unexpected characters in column names
-for col in attendance.columns:
-    print(f"Column name: '{col}' | Length: {len(col)}")
-# Print today's date for debugging
-print("Today's date:", today)
-
-# Test filtering by name only
-filtered_by_name = attendance[attendance["name"] == name]
-print("Filtered by name only:", filtered_by_name)
-
-# Test filtering by clock_in (starts with today)
-filtered_by_clock_in = attendance[attendance["clock_in"].str.startswith(today)]
-print("Filtered by clock_in:", filtered_by_clock_in)
-
-# Test combined filter by name and clock_in
-filtered_by_both = attendance[(attendance["name"] == name) & (attendance["clock_in"].str.startswith(today))]
-print("Filtered by both name and clock_in:", filtered_by_both)
-
-
 
 # Save Data back to Google Sheets
 def save_data_to_google_sheets(df, sheet_name):
@@ -97,6 +75,9 @@ def send_email(to_email, subject, body):
 
 # Load data
 employees, attendance, leaves = load_data()
+
+# Check if attendance is loaded correctly
+print("Attendance DataFrame Columns:", attendance.columns)  # Verify columns in the attendance DataFrame
 
 # Function to send reminder emails if needed
 #def send_clock_out_reminder(employee, attendance):
