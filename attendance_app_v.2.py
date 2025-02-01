@@ -8,27 +8,19 @@ from google.auth.transport.requests import Request
 from google.auth import exceptions
 import json
 from google.oauth2.service_account import Credentials
+from google.oauth2 import service_account
 
 # Constants
 ADMIN_EMAIL = "vysakharaghavan@gmail.com"
 REMINDER_THRESHOLD = timedelta(hours=10)  # 10 hours threshold
 
-# Check the structure of the secret data
-st.write(st.secrets["gcp_service_account"])
-
-# Load the service account key from Streamlit secrets
-service_account_key = json.dumps(st.secrets["gcp_service_account"])
-
-# Parse the service account info from Streamlit secrets
-credentials_dict = json.loads(service_account_key)
+# Use the service account dictionary directly from Streamlit secrets
+credentials = service_account.Credentials.from_service_account_info(st.secrets["gcp_service_account"])
 
 # Google Sheets Authentication
 SHEET_URL = "https://docs.google.com/spreadsheets/d/1Q9cMKjS1E8bqscOPixzyNMxmxo64twE9QOWT3e7NHIA/edit?usp=sharing"  # Replace with actual URL
 
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-
-# Create credentials from the service account JSON info
-credentials = Credentials.from_service_account_info(credentials_dict, scopes=scope)
 
 # Authorize the client to access Google Sheets
 client = gspread.authorize(credentials)
