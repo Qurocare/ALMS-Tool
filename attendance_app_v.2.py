@@ -24,7 +24,7 @@ ADMIN_EMAIL = "vysakharaghavan@gmail.com"
 REMINDER_THRESHOLD = timedelta(hours=10)  # 10 hours threshold
 
 # Use the service account dictionary directly from Streamlit secrets
-credentials = service_account.Credentials.from_service_account_info(st.secrets["gcp_service_account"], scopes=scope)
+#credentials = service_account.Credentials.from_service_account_info(st.secrets["gcp_service_account"], scopes=scope)
 #credentials = service_account.Credentials.from_service_account_info(st.secrets["gcp_service_account"])
 #credentials = service_account.Credentials.from_service_account_info(credentials_info, scopes=scope)
 
