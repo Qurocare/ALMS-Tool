@@ -14,7 +14,7 @@ ADMIN_EMAIL = "vysakharaghavan@gmail.com"
 REMINDER_THRESHOLD = timedelta(hours=10)  # 10 hours threshold
 
 # Load the service account key from Streamlit secrets
-service_account_key = st.secrets["google"]["service_account_key"]
+service_account_key = json.dumps(st.secrets["gcp_service_account"])
 
 # Parse the service account info from Streamlit secrets
 credentials_dict = json.loads(service_account_key)
