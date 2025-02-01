@@ -13,6 +13,9 @@ from google.oauth2.service_account import Credentials
 ADMIN_EMAIL = "vysakharaghavan@gmail.com"
 REMINDER_THRESHOLD = timedelta(hours=10)  # 10 hours threshold
 
+# Check the structure of the secret data
+st.write(st.secrets["gcp_service_account"])
+
 # Load the service account key from Streamlit secrets
 service_account_key = json.dumps(st.secrets["gcp_service_account"])
 
