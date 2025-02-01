@@ -45,6 +45,9 @@ def load_data():
     employees = pd.DataFrame(employees_sheet.get_all_records())
     attendance = pd.DataFrame(attendance_sheet.get_all_records())
     leaves = pd.DataFrame(leaves_sheet.get_all_records())
+
+    # Convert 'passkey' column to string
+    employees["passkey"] = employees["passkey"].astype(str)
     
     return employees, attendance, leaves
     
