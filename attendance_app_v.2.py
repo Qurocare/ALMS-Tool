@@ -10,6 +10,19 @@ import json
 from google.oauth2.service_account import Credentials
 from google.oauth2 import service_account
 
+# Check if the secret is available
+print(st.secrets)
+
+# Load the service account key from Streamlit secrets
+service_account_key = st.secrets.get("gcp_service_account")
+print(service_account_key)  # Ensure it contains the expected data
+
+# Proceed if the key is available
+if service_account_key:
+    credentials = service_account.Credentials.from_service_account_info(service_account_key, scopes=scope)
+else:
+    raise ValueError("Service account key is not found in Streamlit secrets.")
+
 # Constants
 ADMIN_EMAIL = "vysakharaghavan@gmail.com"
 REMINDER_THRESHOLD = timedelta(hours=10)  # 10 hours threshold
