@@ -46,10 +46,13 @@ def load_data():
     attendance = pd.DataFrame(attendance_sheet.get_all_records())
     leaves = pd.DataFrame(leaves_sheet.get_all_records())
 
-    # Check if data is fetched correctly
-    print("Employees DataFrame:", employees.head())  # Check first few rows of employees
-    print("Attendance DataFrame:", attendance.head())  # Check first few rows of attendance
-    print("Leaves DataFrame:", leaves.head())  # Check first few rows of leaves
+    # Define expected columns
+    attendance_columns = ["id", "name", "email", "registered_id", "clock_in", "clock_out", "duration", "status"]
+    leaves_columns = ["id", "name", "email", "registered_id", "start_date", "end_date", "reason"]
+
+    # Create DataFrames with expected columns
+    attendance = pd.DataFrame(attendance_data) if attendance_data else pd.DataFrame(columns=attendance_columns)
+    leaves = pd.DataFrame(leaves_data) if leaves_data else pd.DataFrame(columns=leaves_columns)
 
     # Convert 'passkey' column to string
     employees["passkey"] = employees["passkey"].astype(str)
