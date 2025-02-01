@@ -10,15 +10,14 @@ import json
 from google.oauth2.service_account import Credentials
 from google.oauth2 import service_account
 
-# Check if the secret is available
-print(st.secrets)
+# Define the required Google Sheets API scope
+scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 
 # Load the service account key from Streamlit secrets
 service_account_key = st.secrets.get("gcp_service_account")
-print(service_account_key)  # Ensure it contains the expected data
 
-# Proceed if the key is available
 if service_account_key:
+    # Use the service account info to create credentials
     credentials = service_account.Credentials.from_service_account_info(service_account_key, scopes=scope)
 else:
     raise ValueError("Service account key is not found in Streamlit secrets.")
@@ -34,8 +33,6 @@ credentials = service_account.Credentials.from_service_account_info(st.secrets["
 
 # Google Sheets Authentication
 SHEET_URL = "https://docs.google.com/spreadsheets/d/1Q9cMKjS1E8bqscOPixzyNMxmxo64twE9QOWT3e7NHIA/edit?usp=sharing"  # Replace with actual URL
-
-scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 
 # Authorize the client to access Google Sheets
 client = gspread.authorize(credentials)
