@@ -5,6 +5,8 @@ from datetime import datetime, timedelta
 from email.message import EmailMessage
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
+from google.auth.transport.requests import Request
+from google.auth import exceptions
 
 # Constants
 ADMIN_EMAIL = "vysakharaghavan@gmail.com"
