@@ -69,32 +69,32 @@ def send_email(to_email, subject, body):
 employees, attendance, leaves = load_data()
 
 # Function to send reminder emails if needed
-def send_clock_out_reminder(employee, attendance):
-    today = datetime.now().strftime("%Y-%m-%d")
+#def send_clock_out_reminder(employee, attendance):
+    #today = datetime.now().strftime("%Y-%m-%d")
     
     # Convert clock_in to string and handle NaN values
-    attendance["clock_in"] = attendance["clock_in"].fillna("").astype(str)
+    #attendance["clock_in"] = attendance["clock_in"].fillna("").astype(str)
     
-    user_attendance = attendance[(attendance["name"] == employee["name"]) & (attendance["clock_in"].str.startswith(today))]
+    #user_attendance = attendance[(attendance["name"] == employee["name"]) & (attendance["clock_in"].str.startswith(today))]
     
-    if not user_attendance.empty:
-        last_clock_in_time_str = user_attendance.iloc[-1]["clock_in"]
-        last_clock_in_time = datetime.strptime(last_clock_in_time_str, "%H:%M")
+    #if not user_attendance.empty:
+        #last_clock_in_time_str = user_attendance.iloc[-1]["clock_in"]
+        #last_clock_in_time = datetime.strptime(last_clock_in_time_str, "%H:%M")
         
-        current_time = datetime.now()
-        if current_time - last_clock_in_time > REMINDER_THRESHOLD:
-            if pd.isna(user_attendance.iloc[-1]["clock_out"]):
-                send_email(
-                    employee["email"],
-                    "Reminder: Clock-Out Pending",
-                    f"Dear {employee['name']},\n\n"
-                    f"This is a reminder that you haven't clocked out yet.\n"
-                    f"Clock-In Time: {last_clock_in_time_str}\n"
-                    f"Current Time: {current_time.strftime('%H:%M')}\n\n"
-                    "Please make sure to clock out as soon as possible.\n\n"
-                    "Thank you!"
-                )
-                st.success(f"Reminder sent to {employee['name']} for not clocking out after 10 hours.")
+        #current_time = datetime.now()
+        #if current_time - last_clock_in_time > REMINDER_THRESHOLD:
+            #if pd.isna(user_attendance.iloc[-1]["clock_out"]):
+                #send_email(
+                    #employee["email"],
+                    #"Reminder: Clock-Out Pending",
+                    #f"Dear {employee['name']},\n\n"
+                    #f"This is a reminder that you haven't clocked out yet.\n"
+                    #f"Clock-In Time: {last_clock_in_time_str}\n"
+                    #f"Current Time: {current_time.strftime('%H:%M')}\n\n"
+                    #"Please make sure to clock out as soon as possible.\n\n"
+                    #"Thank you!"
+                #)
+                #st.success(f"Reminder sent to {employee['name']} for not clocking out after 10 hours.")
 
 # Check for clock-out reminders for all employees when the app loads or every time they interact
 for _, employee in employees.iterrows():
