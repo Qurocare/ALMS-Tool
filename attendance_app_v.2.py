@@ -97,8 +97,8 @@ employees, attendance, leaves = load_data()
                 #st.success(f"Reminder sent to {employee['name']} for not clocking out after 10 hours.")
 
 # Check for clock-out reminders for all employees when the app loads or every time they interact
-for _, employee in employees.iterrows():
-    send_clock_out_reminder(employee, attendance)
+#for _, employee in employees.iterrows():
+    #send_clock_out_reminder(employee, attendance)
 
 # Title for the app
 st.title("Attendance and Leave Management System")
