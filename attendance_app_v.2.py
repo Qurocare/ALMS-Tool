@@ -7,17 +7,29 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from google.auth.transport.requests import Request
 from google.auth import exceptions
+import json
+from google.oauth2.service_account import Credentials
 
 # Constants
 ADMIN_EMAIL = "vysakharaghavan@gmail.com"
 REMINDER_THRESHOLD = timedelta(hours=10)  # 10 hours threshold
 
+# Load the service account key from Streamlit secrets
+service_account_key = st.secrets["google"]["service_account_key"]
+
+# Parse the JSON string into a dictionary
+credentials_dict = json.loads(service_account_key)
+
 # Google Sheets Authentication
 SHEET_URL = "https://docs.google.com/spreadsheets/d/1Q9cMKjS1E8bqscOPixzyNMxmxo64twE9QOWT3e7NHIA/edit?usp=sharing"  # Replace with actual URL
-SERVICE_ACCOUNT_FILE = "qurocare-alms-tool-965aa7b57765.json"  # Update with your JSON file
+#SERVICE_ACCOUNT_FILE = "qurocare-alms-tool-965aa7b57765.json"  # Update with your JSON file
 
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-credentials = ServiceAccountCredentials.from_json_keyfile_name(SERVICE_ACCOUNT_FILE, scope)
+
+# Create credentials from the service account JSON info
+credentials = Credentials.from_service_account_info(credentials_dict, scopes=scopes)
+
+# Authorize the client to access Google Sheets
 client = gspread.authorize(credentials)
 
 # Open Sheets
