@@ -16,11 +16,8 @@ scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/au
 # Load the service account key from Streamlit secrets
 service_account_key = st.secrets.get("gcp_service_account")
 
-if service_account_key:
-    # Use the service account info to create credentials
-    credentials = service_account.Credentials.from_service_account_info(service_account_key, scopes=scope)
-else:
-    raise ValueError("Service account key is not found in Streamlit secrets.")
+# Use the service account info to create credentials
+credentials = service_account.Credentials.from_service_account_info(service_account_key, scopes=scope)
 
 # Constants
 ADMIN_EMAIL = "vysakharaghavan@gmail.com"
