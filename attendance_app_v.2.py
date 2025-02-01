@@ -186,39 +186,41 @@ if name != "Select Your Name" and passkey:
             if st.session_state.clock_out_time is not None:
                 st.session_state.clock_in_time = None
                 st.session_state.clock_out_time = None
-
+        
+        # Leave Application Section
+        st.subheader("Apply for Leave")
         if st.button("Apply Leave"):
-    # Ensure dates are valid
-    if start_date > end_date:
-        st.error("End date cannot be before start date.")
-    else:
-        # Convert dates to strings
-        start_date_str = start_date.strftime("%Y-%m-%d")
-        end_date_str = end_date.strftime("%Y-%m-%d")
+            # Ensure dates are valid
+            if start_date > end_date:
+                st.error("End date cannot be before start date.")
+            else:
+                # Convert dates to strings
+                start_date_str = start_date.strftime("%Y-%m-%d")
+                end_date_str = end_date.strftime("%Y-%m-%d")
 
-        # Check for overlapping leave requests
-        existing_leaves = leaves[(leaves["name"] == name) & 
+                # Check for overlapping leave requests
+                existing_leaves = leaves[(leaves["name"] == name) & 
                                  ((leaves["start_date"] <= start_date_str) & (leaves["end_date"] >= start_date_str)) |
                                  ((leaves["start_date"] <= end_date_str) & (leaves["end_date"] >= end_date_str))]
         
-        if not existing_leaves.empty:
-            st.error("You already have a leave request for these dates.")
-        else:
-            new_leave = pd.DataFrame({
-                "id": [len(leaves) + 1],
-                "name": [name],
-                "email": [user["email"]],
-                "registered_id": [user["registered_id"]],
-                "start_date": [start_date_str],
-                "end_date": [end_date_str],
-                "reason": [reason]  # Added missing reason
-            })
+                if not existing_leaves.empty:
+                    st.error("You already have a leave request for these dates.")
+                else:
+                    new_leave = pd.DataFrame({
+                        "id": [len(leaves) + 1],
+                        "name": [name],
+                        "email": [user["email"]],
+                        "registered_id": [user["registered_id"]],
+                        "start_date": [start_date_str],
+                        "end_date": [end_date_str],
+                        "reason": [reason]  # Added missing reason
+                    })
 
-            # Append new leave entry
-            leaves = pd.concat([leaves, new_leave], ignore_index=True)
-            save_data_to_google_sheets(leaves, "leaves")  # Ensure this function works properly
+                    # Append new leave entry
+                    leaves = pd.concat([leaves, new_leave], ignore_index=True)
+                    save_data_to_google_sheets(leaves, "leaves")  # Ensure this function works properly
 
-            st.success("Leave applied successfully!")
+                    st.success("Leave applied successfully!")
                 
         # Logout Button
         if st.button("Logout"):
