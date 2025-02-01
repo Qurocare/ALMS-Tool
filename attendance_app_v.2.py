@@ -4,7 +4,6 @@ import smtplib
 from datetime import datetime, timedelta
 from email.message import EmailMessage
 import gspread
-from oauth2client.service_account import ServiceAccountCredentials
 from google.auth.transport.requests import Request
 from google.auth import exceptions
 import json
@@ -17,17 +16,16 @@ REMINDER_THRESHOLD = timedelta(hours=10)  # 10 hours threshold
 # Load the service account key from Streamlit secrets
 service_account_key = st.secrets["google"]["service_account_key"]
 
-# Parse the JSON string into a dictionary
+# Parse the service account info from Streamlit secrets
 credentials_dict = json.loads(service_account_key)
 
 # Google Sheets Authentication
 SHEET_URL = "https://docs.google.com/spreadsheets/d/1Q9cMKjS1E8bqscOPixzyNMxmxo64twE9QOWT3e7NHIA/edit?usp=sharing"  # Replace with actual URL
-#SERVICE_ACCOUNT_FILE = "qurocare-alms-tool-965aa7b57765.json"  # Update with your JSON file
 
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 
 # Create credentials from the service account JSON info
-credentials = Credentials.from_service_account_info(credentials_dict, scopes=scopes)
+credentials = Credentials.from_service_account_info(credentials_dict, scopes=scope)
 
 # Authorize the client to access Google Sheets
 client = gspread.authorize(credentials)
@@ -145,7 +143,7 @@ if name != "Select Your Name" and passkey:
                         "status": [status]
                     })
                     attendance = pd.concat([attendance, new_entry], ignore_index=True)
-                    save_data(attendance, ATTENDANCE_CSV)
+                    save_data_to_google_sheets(attendance, "attendance")
                     st.session_state.clock_in_time = clock_in_time
                     st.session_state.status = status
                     st.success(f"Clocked in at {clock_in_time}. Status: {status}")
@@ -157,7 +155,7 @@ if name != "Select Your Name" and passkey:
                     clock_in_time = st.session_state.clock_in_time
                     duration = (datetime.strptime(clock_out_time, "%H:%M") - datetime.strptime(clock_in_time, "%H:%M")).seconds / 3600
                     attendance.loc[attendance["clock_in"] == clock_in_time, ["clock_out", "duration"]] = [clock_out_time, duration]
-                    save_data(attendance, ATTENDANCE_CSV)
+                    save_data_to_google_sheets(attendance, "attendance")
                     st.session_state.clock_out_time = clock_out_time
                     st.session_state.duration = duration
                     st.success(f"Clocked out at {clock_out_time}. Worked for {duration:.2f} hours.")
@@ -171,7 +169,7 @@ if name != "Select Your Name" and passkey:
                 st.session_state.clock_in_time = None
                 st.session_state.clock_out_time = None
 
-       # Leave Application Section
+        # Leave Application Section
         st.subheader("Apply for Leave")
         start_date = st.date_input("Start Date")
         end_date = st.date_input("End Date")
@@ -188,7 +186,7 @@ if name != "Select Your Name" and passkey:
                 "reason": [reason]
             })
             leaves = pd.concat([leaves, new_leave], ignore_index=True)
-            save_data(leaves, LEAVE_CSV)
+            save_data_to_google_sheets(leaves, "leaves")
             #send_email(ADMIN_EMAIL, "New Leave Request", f"{name} applied for leave from {start_date} to {end_date}.")
             send_email(
                ADMIN_EMAIL, 
