@@ -11,6 +11,12 @@ from google.oauth2.service_account import Credentials
 from google.oauth2 import service_account
 import pytz
 
+# Initialize session state variables (Place this at the beginning of your script)
+if "clock_in_time" not in st.session_state:
+    st.session_state.clock_in_time = None
+if "clock_out_time" not in st.session_state:
+    st.session_state.clock_out_time = None
+
 # Define the required Google Sheets API scope
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 
@@ -176,6 +182,7 @@ if name != "Select Your Name" and passkey:
                     st.session_state.clock_in_time = clock_in_time  # Store session
                     st.session_state.status = status
                     st.success(f"Clocked in at {clock_in_time}. Status: {status}")
+                    st.experimental_rerun()  # Force page rerun to show Clock Out button
 
             elif st.session_state.clock_in_time is not None and st.session_state.clock_out_time is None:
                 # Clock Out action
@@ -192,6 +199,7 @@ if name != "Select Your Name" and passkey:
                     st.session_state.clock_out_time = clock_out_time  # Store session
                     st.session_state.duration = duration
                     st.success(f"Clocked out at {clock_out_time}. Worked for {duration:.2f} hours.")
+                    st.experimental_rerun()  # Force page rerun to reset button states
 
             # Reset session state after Clock Out
             if st.session_state.clock_out_time is not None:
