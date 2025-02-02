@@ -163,7 +163,10 @@ if name != "Select Your Name" and passkey:
                     )  # Convert to datetime
                     late_threshold = actual_clock_in + timedelta(minutes=10)
                     status = "Half Day" if now > late_threshold else "Full Day"
-        
+
+                    print(type(now))
+                    print(type(late_threshold))
+
                     new_entry = pd.DataFrame({
                         "id": [len(attendance) + 1],
                         "name": [name],
