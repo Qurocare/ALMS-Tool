@@ -10,9 +10,6 @@ import json
 from google.oauth2.service_account import Credentials
 from google.oauth2 import service_account
 
-# Constants
-ADMIN_EMAIL = "777bizcentre@gmail.com"
-
 # Define the required Google Sheets API scope
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 
@@ -23,8 +20,8 @@ service_account_key = st.secrets.get("gcp_service_account")
 credentials = service_account.Credentials.from_service_account_info(service_account_key, scopes=scope)
 
 # Constants
-ADMIN_EMAIL = "vysakharaghavan@gmail.com"
-REMINDER_THRESHOLD = timedelta(hours=10)  # 10 hours threshold
+ADMIN_EMAIL = "777bizcentre@gmail.com"
+#REMINDER_THRESHOLD = timedelta(hours=10)  # 10 hours threshold
 
 # Use the service account dictionary directly from Streamlit secrets
 #credentials = service_account.Credentials.from_service_account_info(st.secrets["gcp_service_account"], scopes=scope)
