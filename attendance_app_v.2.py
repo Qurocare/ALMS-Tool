@@ -9,10 +9,6 @@ from google.auth import exceptions
 import json
 from google.oauth2.service_account import Credentials
 from google.oauth2 import service_account
-import pytz  # Import timezone handling
-
-# Define timezone (adjust according to your region)
-LOCAL_TIMEZONE = pytz.timezone("Asia/Kolkata")  # Replace with your actual timezone
 
 # Define the required Google Sheets API scope
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
@@ -25,12 +21,6 @@ credentials = service_account.Credentials.from_service_account_info(service_acco
 
 # Constants
 ADMIN_EMAIL = "777bizcentre@gmail.com"
-#REMINDER_THRESHOLD = timedelta(hours=10)  # 10 hours threshold
-
-# Use the service account dictionary directly from Streamlit secrets
-#credentials = service_account.Credentials.from_service_account_info(st.secrets["gcp_service_account"], scopes=scope)
-#credentials = service_account.Credentials.from_service_account_info(st.secrets["gcp_service_account"])
-#credentials = service_account.Credentials.from_service_account_info(credentials_info, scopes=scope)
 
 # Google Sheets Authentication
 SHEET_URL = "https://docs.google.com/spreadsheets/d/1Q9cMKjS1E8bqscOPixzyNMxmxo64twE9QOWT3e7NHIA/edit?usp=sharing"  # Replace with actual URL
@@ -47,8 +37,6 @@ leaves_sheet = sheet.worksheet("leaves")
 # Load CSV files
 def load_data():
     employees = pd.DataFrame(employees_sheet.get_all_records())
-    #attendance = pd.DataFrame(attendance_sheet.get_all_records())
-    #leaves = pd.DataFrame(leaves_sheet.get_all_records())
 
     # Define expected columns
     attendance_columns = ["id", "name", "email", "registered_id", "clock_in", "clock_out", "duration", "status"]
@@ -83,41 +71,6 @@ def send_email(to_email, subject, body):
 # Load data
 employees, attendance, leaves = load_data()
 
-# Check if attendance is loaded correctly
-print("Attendance DataFrame Columns:", attendance.columns)  # Verify columns in the attendance DataFrame
-
-# Function to send reminder emails if needed
-#def send_clock_out_reminder(employee, attendance):
-    #today = datetime.now().strftime("%Y-%m-%d")
-    
-    # Convert clock_in to string and handle NaN values
-    #attendance["clock_in"] = attendance["clock_in"].fillna("").astype(str)
-    
-    #user_attendance = attendance[(attendance["name"] == employee["name"]) & (attendance["clock_in"].str.startswith(today))]
-    
-    #if not user_attendance.empty:
-        #last_clock_in_time_str = user_attendance.iloc[-1]["clock_in"]
-        #last_clock_in_time = datetime.strptime(last_clock_in_time_str, "%H:%M")
-        
-        #current_time = datetime.now()
-        #if current_time - last_clock_in_time > REMINDER_THRESHOLD:
-            #if pd.isna(user_attendance.iloc[-1]["clock_out"]):
-                #send_email(
-                    #employee["email"],
-                    #"Reminder: Clock-Out Pending",
-                    #f"Dear {employee['name']},\n\n"
-                    #f"This is a reminder that you haven't clocked out yet.\n"
-                    #f"Clock-In Time: {last_clock_in_time_str}\n"
-                    #f"Current Time: {current_time.strftime('%H:%M')}\n\n"
-                    #"Please make sure to clock out as soon as possible.\n\n"
-                    #"Thank you!"
-                #)
-                #st.success(f"Reminder sent to {employee['name']} for not clocking out after 10 hours.")
-
-# Check for clock-out reminders for all employees when the app loads or every time they interact
-#for _, employee in employees.iterrows():
-    #send_clock_out_reminder(employee, attendance)
-
 # Title for the app
 st.title("Attendance and Leave Management System")
 st.header("Qurocare - ALMS Tool")
@@ -142,8 +95,8 @@ if name != "Select Your Name" and passkey:
         st.subheader("Kindly mark your attendance")
         
         # Clock In/Out Section (single toggle button)
-        clocked_in = False
         if user_attendance.empty or pd.isna(user_attendance.iloc[-1]["clock_out"]):
+            # Ensure clock_in_time persists across sessions
             if 'clock_in_time' not in st.session_state:
                 st.session_state.clock_in_time = None
                 st.session_state.clock_out_time = None
@@ -152,21 +105,8 @@ if name != "Select Your Name" and passkey:
             if st.session_state.clock_in_time is None:
                 # Clock In action
                 if st.button("Clock In"):
-                    now = datetime.now().astimezone(LOCAL_TIMEZONE)
-                    clock_in_time = now.strftime("%Y-%m-%d %H:%M:%S")  # Store full date-time
-                    st.session_state.clock_in_time = clock_in_time
-                    #status = "Half Day" if datetime.strptime(clock_in_time, "%H:%M") > (datetime.strptime(actual_clock_in, "%H:%M") + timedelta(minutes=10)) else "Full Day"
-                    
-                    #Determine status
-                    actual_clock_in = datetime.strptime(user["actual_clock_in"], "%H:%M").replace(
-                        year=now.year, month=now.month, day=now.day
-                    )  # Convert to datetime
-                    late_threshold = actual_clock_in + timedelta(minutes=10)
-                    status = "Half Day" if now > late_threshold else "Full Day"
-
-                    print(type(now))
-                    print(type(late_threshold))
-
+                    clock_in_time = datetime.now().strftime("%H:%M")
+                    status = "Half Day" if datetime.strptime(clock_in_time, "%H:%M") > (datetime.strptime(actual_clock_in, "%H:%M") + timedelta(minutes=10)) else "Full Day"
                     new_entry = pd.DataFrame({
                         "id": [len(attendance) + 1],
                         "name": [name],
@@ -177,30 +117,22 @@ if name != "Select Your Name" and passkey:
                         "duration": [None],
                         "status": [status]
                     })
-        
                     attendance = pd.concat([attendance, new_entry], ignore_index=True)
                     save_data_to_google_sheets(attendance, "attendance")
-                    #st.session_state.clock_in_time = clock_in_time
-                    #st.session_state.status = status
+                    st.session_state.clock_in_time = clock_in_time
+                    st.session_state.status = status
                     st.success(f"Clocked in at {clock_in_time}. Status: {status}")
             
-            elif st.session_state.clock_out_time is None:
+            elif st.session_state.clock_in_time is not None and st.session_state.clock_out_time is None:
                 # Clock Out action
                 if st.button("Clock Out"):
-                    now = datetime.now().astimezone(LOCAL_TIMEZONE)
-                    clock_out_time = now.strftime("%Y-%m-%d %H:%M:%S")
-
-                    # Convert stored times to datetime objects
-                    clock_in_time_dt = datetime.strptime(st.session_state.clock_in_time, "%Y-%m-%d %H:%M:%S")
-                    clock_out_time_dt = datetime.strptime(clock_out_time, "%Y-%m-%d %H:%M:%S")
-                    
-                    duration = (clock_out_time_dt - clock_in_time_dt).total_seconds() / 3600  # Use total_seconds()
-                    attendance.loc[attendance["clock_in"] == st.session_state.clock_in_time, ["clock_out", "duration"]] = [
-                        clock_out_time, duration
-                    ]
+                    clock_out_time = datetime.now().strftime("%H:%M")
+                    clock_in_time = st.session_state.clock_in_time
+                    duration = (datetime.strptime(clock_out_time, "%H:%M") - datetime.strptime(clock_in_time, "%H:%M")).seconds / 3600
+                    attendance.loc[attendance["clock_in"] == clock_in_time, ["clock_out", "duration"]] = [clock_out_time, duration]
                     save_data_to_google_sheets(attendance, "attendance")
-
                     st.session_state.clock_out_time = clock_out_time
+                    st.session_state.duration = duration
                     st.success(f"Clocked out at {clock_out_time}. Worked for {duration:.2f} hours.")
                     
                     # Display clock-out time and duration
@@ -265,11 +197,8 @@ if name != "Select Your Name" and passkey:
                     st.success("Leave applied successfully! Notification sent to Admin.")
                 
         # Logout Button
-        #if st.button("Logout"):
-            #for key in list(st.session_state.keys()):
-                #del st.session_state[key]  # Clear all session data
-            #st.rerun()  # Fully refresh the page
-            
+        if st.button("Logout"):
+            st.experimental_rerun()  # This will refresh the page for re-login
 else:
     if name == "Select Your Name":
         st.error("Please select a valid name.")
