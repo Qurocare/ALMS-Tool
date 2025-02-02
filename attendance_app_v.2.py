@@ -11,6 +11,11 @@ from google.oauth2.service_account import Credentials
 from google.oauth2 import service_account
 import pytz
 
+if "clock_in_time" in st.session_state:
+    del st.session_state["clock_in_time"]
+if "clock_out_time" in st.session_state:
+    del st.session_state["clock_out_time"]
+
 # Define the required Google Sheets API scope
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 
