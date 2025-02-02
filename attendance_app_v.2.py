@@ -241,6 +241,7 @@ if name != "Select Your Name" and passkey:
                     )
 
                     st.success("Leave applied successfully! Notification sent to Admin.")
+                    st.write("Email Sent")
                 
         # Logout Button
         if st.button("Logout"):
