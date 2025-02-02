@@ -148,8 +148,7 @@ if name != "Select Your Name" and passkey:
             if st.session_state.clock_in_time is None:
                 # Clock In action
                 if st.button("Clock In"):
-                    #clock_in_time = datetime.now().strftime("%H:%M")
-                    clock_in_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    clock_in_time = datetime.now().strftime("%H:%M")
                     status = "Half Day" if datetime.strptime(clock_in_time, "%H:%M") > (datetime.strptime(actual_clock_in, "%H:%M") + timedelta(minutes=10)) else "Full Day"
                     new_entry = pd.DataFrame({
                         "id": [len(attendance) + 1],
