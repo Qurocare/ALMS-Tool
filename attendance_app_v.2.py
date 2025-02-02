@@ -139,57 +139,57 @@ if name != "Select Your Name" and passkey:
         st.subheader("Kindly mark your attendance")
         
         # Clock In/Out Section (single toggle button)
-clocked_in = False
-if user_attendance.empty or pd.isna(user_attendance.iloc[-1]["clock_out"]):
-    if 'clock_in_time' not in st.session_state:
-        st.session_state.clock_in_time = None
-        st.session_state.clock_out_time = None
+        clocked_in = False
+        if user_attendance.empty or pd.isna(user_attendance.iloc[-1]["clock_out"]):
+            if 'clock_in_time' not in st.session_state:
+            st.session_state.clock_in_time = None
+            st.session_state.clock_out_time = None
 
-    # Display the button (Clock In/Clock Out)
-    if st.session_state.clock_in_time is None:
-        # Clock In action
-        if st.button("Clock In"):
-            ist = pytz.timezone("Asia/Kolkata")
-            clock_in_time = datetime.now(ist).strftime("%Y-%m-%d %H:%M:%S")  # Includes date
-            status = "Half Day" if datetime.strptime(clock_in_time, "%Y-%m-%d %H:%M:%S").time() > (
-                datetime.strptime(actual_clock_in, "%H:%M").time() + timedelta(minutes=10)) else "Full Day"
+            # Display the button (Clock In/Clock Out)
+            if st.session_state.clock_in_time is None:
+                # Clock In action
+                if st.button("Clock In"):
+                    ist = pytz.timezone("Asia/Kolkata")
+                    clock_in_time = datetime.now(ist).strftime("%Y-%m-%d %H:%M:%S")  # Includes date
+                    status = "Half Day" if datetime.strptime(clock_in_time, "%Y-%m-%d %H:%M:%S").time() > (
+                        datetime.strptime(actual_clock_in, "%H:%M").time() + timedelta(minutes=10)) else "Full Day"
 
-            new_entry = pd.DataFrame({
-                "id": [len(attendance) + 1],
-                "name": [name],
-                "email": [user["email"]],
-                "registered_id": [user["registered_id"]],
-                "clock_in": [clock_in_time],
-                "clock_out": [None],
-                "duration": [None],
-                "status": [status]
-            })
-            attendance = pd.concat([attendance, new_entry], ignore_index=True)
-            save_data_to_google_sheets(attendance, "attendance")
-            st.session_state.clock_in_time = clock_in_time  # Store session
-            st.session_state.status = status
-            st.success(f"Clocked in at {clock_in_time}. Status: {status}")
+                    new_entry = pd.DataFrame({
+                        "id": [len(attendance) + 1],
+                        "name": [name],
+                        "email": [user["email"]],
+                        "registered_id": [user["registered_id"]],
+                        "clock_in": [clock_in_time],
+                        "clock_out": [None],
+                        "duration": [None],
+                        "status": [status]
+                    })
+                    attendance = pd.concat([attendance, new_entry], ignore_index=True)
+                    save_data_to_google_sheets(attendance, "attendance")
+                    st.session_state.clock_in_time = clock_in_time  # Store session
+                    st.session_state.status = status
+                    st.success(f"Clocked in at {clock_in_time}. Status: {status}")
 
-    elif st.session_state.clock_in_time is not None and st.session_state.clock_out_time is None:
-        # Clock Out action
-        if st.button("Clock Out"):
-            ist = pytz.timezone("Asia/Kolkata")
-            clock_out_time = datetime.now(ist).strftime("%Y-%m-%d %H:%M:%S")  # Includes date
-            clock_in_time = st.session_state.clock_in_time
-            duration = (datetime.strptime(clock_out_time, "%Y-%m-%d %H:%M:%S") -
-                        datetime.strptime(clock_in_time, "%Y-%m-%d %H:%M:%S")).seconds / 3600
+            elif st.session_state.clock_in_time is not None and st.session_state.clock_out_time is None:
+                # Clock Out action
+                if st.button("Clock Out"):
+                    ist = pytz.timezone("Asia/Kolkata")
+                    clock_out_time = datetime.now(ist).strftime("%Y-%m-%d %H:%M:%S")  # Includes date
+                    clock_in_time = st.session_state.clock_in_time
+                    duration = (datetime.strptime(clock_out_time, "%Y-%m-%d %H:%M:%S") -
+                                datetime.strptime(clock_in_time, "%Y-%m-%d %H:%M:%S")).seconds / 3600
             
-            attendance.loc[attendance["clock_in"] == clock_in_time, ["clock_out", "duration"]] = [clock_out_time, duration]
-            save_data_to_google_sheets(attendance, "attendance")
+                    attendance.loc[attendance["clock_in"] == clock_in_time, ["clock_out", "duration"]] = [clock_out_time, duration]
+                    save_data_to_google_sheets(attendance, "attendance")
 
-            st.session_state.clock_out_time = clock_out_time  # Store session
-            st.session_state.duration = duration
-            st.success(f"Clocked out at {clock_out_time}. Worked for {duration:.2f} hours.")
+                    st.session_state.clock_out_time = clock_out_time  # Store session
+                    st.session_state.duration = duration
+                    st.success(f"Clocked out at {clock_out_time}. Worked for {duration:.2f} hours.")
 
-    # Reset session state after Clock Out
-    if st.session_state.clock_out_time is not None:
-        st.session_state.clock_in_time = None
-        st.session_state.clock_out_time = None
+            # Reset session state after Clock Out
+            if st.session_state.clock_out_time is not None:
+                st.session_state.clock_in_time = None
+                st.session_state.clock_out_time = None
 
         
         st.subheader("Apply for Leave")
