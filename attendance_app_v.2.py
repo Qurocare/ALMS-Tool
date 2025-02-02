@@ -238,13 +238,12 @@ if name != "Select Your Name" and passkey:
                     )
 
                     st.success("Leave applied successfully! Notification sent to Admin.")
-                    st.write("Email Sent")
                 
         # Logout Button
         if st.button("Logout"):
             for key in list(st.session_state.keys()):
                 del st.session_state[key]  # Clear all session data
-            st.experimental_rerun()  # Fully refresh the page
+            st.rerun()  # Fully refresh the page
             
 else:
     if name == "Select Your Name":
