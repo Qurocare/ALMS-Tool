@@ -179,7 +179,7 @@ if name != "Select Your Name" and passkey:
             
             elif st.session_state.clock_in_time is not None and st.session_state.clock_out_time is None:
                 # Clock Out action
-                #if st.button("Clock Out"):
+                if st.button("Clock Out"):
                     ist = pytz.timezone("Asia/Kolkata")
                     clock_out_time = datetime.now(ist).strftime("%Y-%m-%d %H:%M:%S")  # Includes date
                     #clock_out_time = datetime.now(ist).strftime("%H:%M")
@@ -190,13 +190,13 @@ if name != "Select Your Name" and passkey:
                                 datetime.strptime(clock_in_time, "%Y-%m-%d %H:%M:%S")).seconds / 3600
                     attendance.loc[attendance["clock_in"] == clock_in_time, ["clock_out", "duration"]] = [clock_out_time, duration]
                     save_data_to_google_sheets(attendance, "attendance")
-                    #st.session_state.clock_out_time = clock_out_time
-                    #st.session_state.duration = duration
-                    #st.success(f"Clocked out at {clock_out_time}. Worked for {duration:.2f} hours.")
+                    st.session_state.clock_out_time = clock_out_time
+                    st.session_state.duration = duration
+                    st.success(f"Clocked out at {clock_out_time}. Worked for {duration:.2f} hours.")
                     
                     # Display clock-out time and duration
-                    #st.write(f"Clocked out at: {clock_out_time}")
-                    #st.write(f"Total duration: {duration:.2f} hours")
+                    st.write(f"Clocked out at: {clock_out_time}")
+                    st.write(f"Total duration: {duration:.2f} hours")
 
             # Re-enable Clock In after clocking out
             if st.session_state.clock_out_time is not None:
