@@ -147,9 +147,9 @@ if name != "Select Your Name" and passkey:
         # Clock In/Out Section (single toggle button)
         clocked_in = False
         if user_attendance.empty or pd.isna(user_attendance.iloc[-1]["clock_out"]):
-            if 'clock_in_time' not in st.session_state:
-                st.session_state.clock_in_time = None
-                st.session_state.clock_out_time = None
+            #if 'clock_in_time' not in st.session_state:
+                #st.session_state.clock_in_time = None
+                #st.session_state.clock_out_time = None
 
             # Display the button (Clock In/Clock Out)
             if st.session_state.clock_in_time is None:
