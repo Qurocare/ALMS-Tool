@@ -21,6 +21,12 @@ credentials = service_account.Credentials.from_service_account_info(service_acco
 
 # Constants
 ADMIN_EMAIL = "777bizcentre@gmail.com"
+#REMINDER_THRESHOLD = timedelta(hours=10)  # 10 hours threshold
+
+# Use the service account dictionary directly from Streamlit secrets
+#credentials = service_account.Credentials.from_service_account_info(st.secrets["gcp_service_account"], scopes=scope)
+#credentials = service_account.Credentials.from_service_account_info(st.secrets["gcp_service_account"])
+#credentials = service_account.Credentials.from_service_account_info(credentials_info, scopes=scope)
 
 # Google Sheets Authentication
 SHEET_URL = "https://docs.google.com/spreadsheets/d/1Q9cMKjS1E8bqscOPixzyNMxmxo64twE9QOWT3e7NHIA/edit?usp=sharing"  # Replace with actual URL
@@ -37,6 +43,8 @@ leaves_sheet = sheet.worksheet("leaves")
 # Load CSV files
 def load_data():
     employees = pd.DataFrame(employees_sheet.get_all_records())
+    #attendance = pd.DataFrame(attendance_sheet.get_all_records())
+    #leaves = pd.DataFrame(leaves_sheet.get_all_records())
 
     # Define expected columns
     attendance_columns = ["id", "name", "email", "registered_id", "clock_in", "clock_out", "duration", "status"]
@@ -71,6 +79,41 @@ def send_email(to_email, subject, body):
 # Load data
 employees, attendance, leaves = load_data()
 
+# Check if attendance is loaded correctly
+print("Attendance DataFrame Columns:", attendance.columns)  # Verify columns in the attendance DataFrame
+
+# Function to send reminder emails if needed
+#def send_clock_out_reminder(employee, attendance):
+    #today = datetime.now().strftime("%Y-%m-%d")
+    
+    # Convert clock_in to string and handle NaN values
+    #attendance["clock_in"] = attendance["clock_in"].fillna("").astype(str)
+    
+    #user_attendance = attendance[(attendance["name"] == employee["name"]) & (attendance["clock_in"].str.startswith(today))]
+    
+    #if not user_attendance.empty:
+        #last_clock_in_time_str = user_attendance.iloc[-1]["clock_in"]
+        #last_clock_in_time = datetime.strptime(last_clock_in_time_str, "%H:%M")
+        
+        #current_time = datetime.now()
+        #if current_time - last_clock_in_time > REMINDER_THRESHOLD:
+            #if pd.isna(user_attendance.iloc[-1]["clock_out"]):
+                #send_email(
+                    #employee["email"],
+                    #"Reminder: Clock-Out Pending",
+                    #f"Dear {employee['name']},\n\n"
+                    #f"This is a reminder that you haven't clocked out yet.\n"
+                    #f"Clock-In Time: {last_clock_in_time_str}\n"
+                    #f"Current Time: {current_time.strftime('%H:%M')}\n\n"
+                    #"Please make sure to clock out as soon as possible.\n\n"
+                    #"Thank you!"
+                #)
+                #st.success(f"Reminder sent to {employee['name']} for not clocking out after 10 hours.")
+
+# Check for clock-out reminders for all employees when the app loads or every time they interact
+#for _, employee in employees.iterrows():
+    #send_clock_out_reminder(employee, attendance)
+
 # Title for the app
 st.title("Attendance and Leave Management System")
 st.header("Qurocare - ALMS Tool")
@@ -95,8 +138,8 @@ if name != "Select Your Name" and passkey:
         st.subheader("Kindly mark your attendance")
         
         # Clock In/Out Section (single toggle button)
+        clocked_in = False
         if user_attendance.empty or pd.isna(user_attendance.iloc[-1]["clock_out"]):
-            # Ensure clock_in_time persists across sessions
             if 'clock_in_time' not in st.session_state:
                 st.session_state.clock_in_time = None
                 st.session_state.clock_out_time = None
