@@ -172,6 +172,7 @@ if name != "Select Your Name" and passkey:
             elif st.session_state.clock_in_time is not None and st.session_state.clock_out_time is None:
                 # Clock Out action
                 if st.button("Clock Out"):
+                    ist = pytz.timezone("Asia/Kolkata")
                     clock_out_time = datetime.now(ist).strftime("%H:%M")
                     #clock_out_time = datetime.now().strftime("%H:%M")
                     clock_in_time = st.session_state.clock_in_time
