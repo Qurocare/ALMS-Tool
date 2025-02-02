@@ -151,8 +151,15 @@ if name != "Select Your Name" and passkey:
                 if st.button("Clock In"):
                     ist = pytz.timezone("Asia/Kolkata")
                     clock_in_time = datetime.now(ist).strftime("%Y-%m-%d %H:%M:%S")  # Includes date
-                    status = "Half Day" if datetime.strptime(clock_in_time, "%Y-%m-%d %H:%M:%S").time() > (
-                        datetime.strptime(actual_clock_in, "%H:%M").time() + timedelta(minutes=10)) else "Full Day"
+                    # Convert actual_clock_in to full datetime before adding timedelta
+                    actual_clock_in_dt = datetime.strptime(actual_clock_in, "%H:%M")  # Convert to datetime
+                    actual_clock_in_dt = datetime.combine(datetime.today(), actual_clock_in_dt.time())  # Add today's date
+                    actual_clock_in_dt += timedelta(minutes=10)  # Now safe to add timedelta
+
+                    status = "Half Day" if datetime.strptime(clock_in_time, "%Y-%m-%d %H:%M:%S") > actual_clock_in_dt else "Full Day"
+
+                    #status = "Half Day" if datetime.strptime(clock_in_time, "%Y-%m-%d %H:%M:%S").time() > (
+                        #datetime.strptime(actual_clock_in, "%H:%M").time() + timedelta(minutes=10)) else "Full Day"
 
                     new_entry = pd.DataFrame({
                         "id": [len(attendance) + 1],
