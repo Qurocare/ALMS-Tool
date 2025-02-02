@@ -10,6 +10,9 @@ import json
 from google.oauth2.service_account import Credentials
 from google.oauth2 import service_account
 
+# Constants
+ADMIN_EMAIL = "777bizcentre@gmail.com"
+
 # Define the required Google Sheets API scope
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 
@@ -225,12 +228,26 @@ if name != "Select Your Name" and passkey:
                     leaves = pd.concat([leaves, new_leave], ignore_index=True)
                     save_data_to_google_sheets(leaves, "leaves")  # Ensure this function works properly
 
-                    st.success("Leave applied successfully!")
+                    # Send email notification to Admin
+                    send_email(
+                        ADMIN_EMAIL, 
+                        "New Leave Request", 
+                        f"Employee Name: {name}\n"
+                        f"Email: {user['email']}\n"
+                        f"Start Date: {start_date_str}\n"
+                        f"End Date: {end_date_str}\n"
+                        f"Reason: {reason}\n\n"
+                        "Kindly respond to this leave application."
+                    )
+
+                    st.success("Leave applied successfully! Notification sent to Admin.")
                 
         # Logout Button
         if st.button("Logout"):
-            st.experimental_rerun()  # This will refresh the page for re-login
-        
+            for key in list(st.session_state.keys()):
+                del st.session_state[key]  # Clear all session data
+            st.experimental_rerun()  # Fully refresh the page
+            
 else:
     if name == "Select Your Name":
         st.error("Please select a valid name.")
