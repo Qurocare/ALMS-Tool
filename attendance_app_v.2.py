@@ -183,7 +183,7 @@ if name != "Select Your Name" and passkey:
             
             elif st.session_state.clock_out_time is None:
                 # Clock Out action
-                if st.button("Clock Out")
+                if st.button("Clock Out"):
                     now = datetime.now().astimezone(LOCAL_TIMEZONE)
                     clock_out_time = now.strftime("%Y-%m-%d %H:%M:%S")
 
