@@ -172,7 +172,8 @@ if name != "Select Your Name" and passkey:
             elif st.session_state.clock_in_time is not None and st.session_state.clock_out_time is None:
                 # Clock Out action
                 if st.button("Clock Out"):
-                    clock_out_time = datetime.now().strftime("%H:%M")
+                    clock_out_time = datetime.now(ist).strftime("%H:%M")
+                    #clock_out_time = datetime.now().strftime("%H:%M")
                     clock_in_time = st.session_state.clock_in_time
                     duration = (datetime.strptime(clock_out_time, "%H:%M") - datetime.strptime(clock_in_time, "%H:%M")).seconds / 3600
                     attendance.loc[attendance["clock_in"] == clock_in_time, ["clock_out", "duration"]] = [clock_out_time, duration]
