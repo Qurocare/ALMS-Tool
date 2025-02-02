@@ -171,7 +171,7 @@ if name != "Select Your Name" and passkey:
             
             elif st.session_state.clock_in_time is not None and st.session_state.clock_out_time is None:
                 # Clock Out action
-                if st.button("Clock Out"):
+                #if st.button("Clock Out"):
                     ist = pytz.timezone("Asia/Kolkata")
                     clock_out_time = datetime.now(ist).strftime("%H:%M")
                     #clock_out_time = datetime.now().strftime("%H:%M")
@@ -198,7 +198,6 @@ if name != "Select Your Name" and passkey:
         reason = st.text_area("Reason")  # Keep this to allow users to enter a reason
 
         # Leave Application Section
-        st.subheader("Apply for Leave")
         if st.button("Apply Leave"):
             # Ensure dates are valid
             if start_date > end_date:
@@ -245,8 +244,8 @@ if name != "Select Your Name" and passkey:
                     st.success("Leave applied successfully! Notification sent to Admin.")
                 
         # Logout Button
-        if st.button("Logout"):
-            st.experimental_rerun()  # This will refresh the page for re-login
+        #if st.button("Logout"):
+            #st.experimental_rerun()  # This will refresh the page for re-login
 else:
     if name == "Select Your Name":
         st.error("Please select a valid name.")
