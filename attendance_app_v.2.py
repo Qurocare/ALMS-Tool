@@ -12,7 +12,7 @@ from google.oauth2 import service_account
 import pytz  # Import timezone handling
 
 # Define timezone (adjust according to your region)
-LOCAL_TIMEZONE = pytz.timezone("Kolkata")  # Replace with your actual timezone
+LOCAL_TIMEZONE = pytz.timezone("Asia/Kolkata")  # Replace with your actual timezone
 
 # Define the required Google Sheets API scope
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
