@@ -9,6 +9,10 @@ from google.auth import exceptions
 import json
 from google.oauth2.service_account import Credentials
 from google.oauth2 import service_account
+import pytz  # Import timezone handling
+
+# Define timezone (adjust according to your region)
+LOCAL_TIMEZONE = pytz.timezone("Kolkata")  # Replace with your actual timezone
 
 # Define the required Google Sheets API scope
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
@@ -148,8 +152,18 @@ if name != "Select Your Name" and passkey:
             if st.session_state.clock_in_time is None:
                 # Clock In action
                 if st.button("Clock In"):
-                    clock_in_time = datetime.now().strftime("%H:%M")
-                    status = "Half Day" if datetime.strptime(clock_in_time, "%H:%M") > (datetime.strptime(actual_clock_in, "%H:%M") + timedelta(minutes=10)) else "Full Day"
+                    now = datetime.now().astimezone(LOCAL_TIMEZONE)
+                    clock_in_time = now.strftime("%Y-%m-%d %H:%M:%S")  # Store full date-time
+                    st.session_state.clock_in_time = clock_in_time
+                    #status = "Half Day" if datetime.strptime(clock_in_time, "%H:%M") > (datetime.strptime(actual_clock_in, "%H:%M") + timedelta(minutes=10)) else "Full Day"
+                    
+                    #Determine status
+                    actual_clock_in = datetime.strptime(user["actual_clock_in"], "%H:%M").replace(
+                        year=now.year, month=now.month, day=now.day
+                    )  # Convert to datetime
+                    late_threshold = actual_clock_in + timedelta(minutes=10)
+                    status = "Half Day" if now > late_threshold else "Full Day"
+        
                     new_entry = pd.DataFrame({
                         "id": [len(attendance) + 1],
                         "name": [name],
@@ -160,22 +174,30 @@ if name != "Select Your Name" and passkey:
                         "duration": [None],
                         "status": [status]
                     })
+        
                     attendance = pd.concat([attendance, new_entry], ignore_index=True)
                     save_data_to_google_sheets(attendance, "attendance")
-                    st.session_state.clock_in_time = clock_in_time
-                    st.session_state.status = status
+                    #st.session_state.clock_in_time = clock_in_time
+                    #st.session_state.status = status
                     st.success(f"Clocked in at {clock_in_time}. Status: {status}")
             
-            elif st.session_state.clock_in_time is not None and st.session_state.clock_out_time is None:
+            elif st.session_state.clock_out_time is None:
                 # Clock Out action
                 if st.button("Clock Out")
-                    clock_out_time = datetime.now().strftime("%H:%M")
-                    clock_in_time = st.session_state.clock_in_time
-                    duration = (datetime.strptime(clock_out_time, "%H:%M") - datetime.strptime(clock_in_time, "%H:%M")).seconds / 3600
-                    attendance.loc[attendance["clock_in"] == clock_in_time, ["clock_out", "duration"]] = [clock_out_time, duration]
+                    now = datetime.now().astimezone(LOCAL_TIMEZONE)
+                    clock_out_time = now.strftime("%Y-%m-%d %H:%M:%S")
+
+                    # Convert stored times to datetime objects
+                    clock_in_time_dt = datetime.strptime(st.session_state.clock_in_time, "%Y-%m-%d %H:%M:%S")
+                    clock_out_time_dt = datetime.strptime(clock_out_time, "%Y-%m-%d %H:%M:%S")
+                    
+                    duration = (clock_out_time_dt - clock_in_time_dt).total_seconds() / 3600  # Use total_seconds()
+                    attendance.loc[attendance["clock_in"] == st.session_state.clock_in_time, ["clock_out", "duration"]] = [
+                        clock_out_time, duration
+                    ]
                     save_data_to_google_sheets(attendance, "attendance")
+
                     st.session_state.clock_out_time = clock_out_time
-                    st.session_state.duration = duration
                     st.success(f"Clocked out at {clock_out_time}. Worked for {duration:.2f} hours.")
                     
                     # Display clock-out time and duration
