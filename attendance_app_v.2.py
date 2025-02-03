@@ -152,12 +152,30 @@ if name != "Select Your Name" and passkey:
                     ist = pytz.timezone("Asia/Kolkata")
                     clock_in_time = datetime.now(ist).strftime("%Y-%m-%d %H:%M:%S")  # Includes date
 
-                    # Convert actual_clock_in to full datetime before adding timedelta
-                    actual_clock_in_dt = datetime.strptime(actual_clock_in, "%H:%M")  # Convert to datetime
-                    actual_clock_in_dt = datetime.combine(datetime.today(), actual_clock_in_dt.time())  # Add today's date
-                    actual_clock_in_dt += timedelta(minutes=10)  # Now safe to add timedelta
+                    # Get current time (HH:MM)
+                    #clock_in_time = datetime.now().strftime("%H:%M")
 
+                    # Convert actual_clock_in to datetime object with today's date
+                    actual_clock_in_dt = datetime.strptime(actual_clock_in, "%H:%M")  
+                    #actual_clock_in_dt = datetime.combine(datetime.today(), actual_clock_in_dt.time())
+                    actual_clock_in_dt = datetime.combine(datetime.today(), actual_clock_in_dt.time()) + timedelta(minutes=10)
+
+                    # Add 10 minutes to actual clock-in time
+                    #allowed_clock_in_dt = actual_clock_in_dt + timedelta(minutes=10)
+
+                    # Convert back to HH:MM format for correct comparison
+                    #allowed_clock_in_str = allowed_clock_in_dt.strftime("%H:%M")
+
+                    # Now compare as time-only (like before)
+                    #status = "Half Day" if clock_in_time > allowed_clock_in_str else "Full Day"
                     status = "Half Day" if datetime.strptime(clock_in_time, "%Y-%m-%d %H:%M:%S") > actual_clock_in_dt else "Full Day"
+
+                    # Convert actual_clock_in to full datetime before adding timedelta
+                    #actual_clock_in_dt = datetime.strptime(actual_clock_in, "%H:%M")  # Convert to datetime
+                    #actual_clock_in_dt = datetime.combine(datetime.today(), actual_clock_in_dt.time())  # Add today's date
+                    #actual_clock_in_dt += timedelta(minutes=10)  # Now safe to add timedelta
+
+                    #status = "Half Day" if datetime.strptime(clock_in_time, "%Y-%m-%d %H:%M:%S") > actual_clock_in_dt else "Full Day"
                     #clock_in_time = datetime.now(ist).strftime("%H:%M")
                     #clock_in_time = datetime.now().strftime("%H:%M")
                     #status = "Half Day" if datetime.strptime(clock_in_time, "%H:%M") > (datetime.strptime(actual_clock_in, "%H:%M") + timedelta(minutes=10)) else "Full Day"
